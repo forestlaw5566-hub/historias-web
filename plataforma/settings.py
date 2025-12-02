@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+DEBUG = os.environ.get("DEBUG") == "True"
+SECRET_KEY = os.environ.get("una_clave_secreta_larga_123456789")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +29,7 @@ SECRET_KEY = 'django-insecure-k-)1d9h0p(*wntn4u8kj_kee+r7m)0oap)fhyh*1iqoz2!mbsw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 
 # Application definition
 
