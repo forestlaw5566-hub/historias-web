@@ -13,10 +13,10 @@ def index(request):
     top_historias = (
         Historia.objects
         .annotate(promedio=Avg("rating__estrellas"))
-        .order_by("-promedio")[:5]
+        .order_by("-promedio").first()
     )
 
-    top_vistas = Historia.objects.order_by("-vistas")[:5]
+    top_vistas = Historia.objects.order_by('-vistas').first()
 
     return render(request, "historias/index.html", {
         "historias": historias,
