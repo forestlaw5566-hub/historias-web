@@ -99,12 +99,16 @@ def registro(request):
 def perfil(request):
     mis_historias = []
     favoritos = []
+    notificaciones = []
+
 
     if request.user.perfil.rol in ["autor", "moderador"]:
         mis_historias = Historia.objects.filter(autor=request.user)
-        notificaciones = Notificacion.objects.filter(usuario=request.user).order_by("-fecha")
 
     favoritos = Favorito.objects.filter(usuario=request.user)
+
+
+    notificaciones = Notificacion.objects.filter(usuario=request.user).order_by("-fecha")
 
     return render(request, "historias/perfil.html", {
         "mis_historias": mis_historias,
