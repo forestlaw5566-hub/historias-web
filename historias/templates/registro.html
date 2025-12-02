@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registro</title>
+<style>
+body {background:#0e0e13; color:white; display:flex; justify-content:center; align-items:center; height:100vh;}
+form {background:#1a1a26; padding:30px; border-radius:10px; width:300px;}
+input, select {width:100%; margin:10px 0; padding:8px; border:none; border-radius:5px;}
+button {width:100%; padding:10px; border:none; cursor:pointer; background:#ff7db5;}
+</style>
+</head>
+<body>
+
+<form method="post">
+  {% csrf_token %}
+  <h2>Crear cuenta</h2>
+  <input type="text" name="username" placeholder="Usuario" required>
+  <input type="email" name="email" placeholder="Email">
+  <input type="password" name="password" placeholder="Contraseña" required>
+
+  <select name="rol">
+    <option value="lector">Lector</option>
+    <option value="autor">Autor</option>
+  </select>
+
+  <button type="submit">Registrarse</button>
+</form>
+
+<a href="/login/">Ya tengo cuenta</a>
+
+</body>
+</html>

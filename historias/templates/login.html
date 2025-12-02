@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Iniciar sesión</title>
+  <style>
+    body {background:#0e0e13; color:white; display:flex; justify-content:center; align-items:center; height:100vh;}
+    form {background:#1a1a26; padding:30px; border-radius:10px; width:300px;}
+    input {width:100%; margin:10px 0; padding:8px; border:none; border-radius:5px;}
+    button {width:100%; padding:10px; border:none; cursor:pointer; background:#ff7db5;}
+  </style>
+</head>
+<body>
+
+<form method="post">
+  {% csrf_token %}
+  <h2>Iniciar sesión</h2>
+  {{ form.as_p }}
+  <button type="submit">Entrar</button>
+  <p><a href="/registro/">Crear cuenta</a></p>
+</form>
+
+</body>
+</html>

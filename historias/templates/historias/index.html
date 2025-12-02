@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Historias Web</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+<style>
+body{
+  margin:0;
+  background:#0e0e13;
+  font-family:'Poppins', sans-serif;
+  color:white;
+}
+header{
+  background:#12121a;
+  padding:15px 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+header h1{
+  color:#ff7db5;
+  font-weight:600;
+  margin:0;
+}
+nav a{
+  color:#ddd;
+  margin-left:20px;
+  text-decoration:none;
+}
+nav a:hover{
+  color:#ff7db5;
+}
+.hero{
+  text-align:center;
+  padding:60px 20px;
+  background:linear-gradient(to right, #ff7db5, #7b6cff);
+}
+.hero h2{
+  margin:0;
+  font-size:36px;
+  color:black;
+}
+.hero p{
+  font-size:17px;
+  color:#111;
+}
+.container{
+  padding:30px;
+  max-width:1100px;
+  margin:auto;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+  gap:20px;
+}
+.card{
+  background:#1a1a26;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 0 10px #000;
+  transition:.2s;
+}
+.card:hover{transform:scale(1.02);}
+.card-img{
+  height:150px;
+  background:#333;
+}
+.card-content{
+  padding:15px;
+}
+.card-content h3{margin:0;}
+.tags span{
+  display:inline-block;
+  background:#ff7db5;
+  color:black;
+  padding:4px 10px;
+  border-radius:50px;
+  font-size:12px;
+  margin:4px 3px;
+}
+footer{
+  text-align:center;
+  padding:10px;
+  background:#12121a;
+  color:#666;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HistoriasWeb</h1>
+<nav>
+
+  <a href="/">Inicio</a>
+
+  {% if user.is_authenticated and user.perfil.rol == "autor" or user.perfil.rol == "moderador" %}
+    <a href="/publicar/">Publicar</a>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+    <a href="/perfil/">Perfil</a>
+  <form method="post" action="/logout/" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="background:none;border:none;color:white;cursor:pointer;">
+      Salir
+    </button>
+  </form>
+
+  {% else %}
+    <a href="/login/">Login</a>
+  {% endif %}
+
+</nav>
+
+<h2>👁 Top por vistas</h2>
+<div class="cards">
+  {% for h in top_vistas %}
+    <div class="card">
+      <div class="card-content">
+        <h3><a href="{% url 'leer' h.id %}">{{ h.titulo }}</a></h3>
+        <p>{{ h.vistas }} vistas</p>
+      </div>
+    </div>
+  {% empty %}
+    <p>No hay datos aún.</p>
+  {% endfor %}
+</div>
+
+</header>
+<h2>🔥 Top Historias</h2>
+
+<div class="cards">
+
+{% for h in top_historias %}
+  <div class="card">
+    <div class="card-content">
+      <h3>
+        <a href="{% url 'leer' h.id %}">{{ h.titulo }}</a>
+      </h3>
+
+      <p>
+        ⭐ {{ h.promedio|floatformat:1 }} / 5
+      </p>
+
+    </div>
+  </div>
+{% empty %}
+  <p>No hay historias rankeadas aún.</p>
+{% endfor %}
+
+</div>
+
+<div class="hero">
+  <h2>Descubre nuevas historias</h2>
+  <p>Lee, crea y comparte tus mundos</p>
+</div>
+
+<div class="container">
+  <h2>Novedades</h2>
+  {% for h in historias %}
+  <div class="card">
+    <div class="card-img"></div>
+    <div class="card-content">
+      <h3><a href="{% url 'leer' h.id %}">{{ h.titulo }}</a></h3>
+      <p>{{ h.descripcion }}</p>
+      <p><small>Por {{ h.autor }} | {{ h.fecha|date:"d M Y" }}</small></p>
+
+      {% if user.is_authenticated %}
+        {% if user.perfil.rol == "moderador" or user.perfil.rol == "autor" and h.autor == user %}
+          <a href="{% url 'borrar' h.id %}">Borrar</a>
+        {% endif %}
+      {% endif %}
+
+    </div>
+  </div>
+{% empty %}
+<p>No hay historias publicadas todavía.</p>
+{% endfor %}
+
+{% if user.is_authenticated and user.perfil.rol == "moderador" %}
+    <a href="/moderacion/">Moderación</a>
+{% endif %}
+
+<footer>
+  Proyecto académico en Django
+</footer>
+
+</body>
+</html>

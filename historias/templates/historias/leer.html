@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>{{ historia.titulo }}</title>
+{% if promedio %}
+  <p>⭐ Promedio: {{ promedio }}/5</p>
+{% else %}
+  <p>Sin votos aún</p>
+{% endif %}
+
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'votar' historia.id %}">
+  {% csrf_token %}
+<style>
+.rating-box{
+  background:#14141c;
+  padding:12px;
+  border-radius:10px;
+  margin-top:15px;
+  display:inline-block;
+}
+.rating-box{ margin-top:40px; }
+.stars{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  font-size:28px;
+}
+.stars input{display:none;}
+.stars label{
+  color:#444;
+  cursor:pointer;
+  transition:.2s;
+}
+.stars label:hover,
+.stars label:hover ~ label,
+.stars input:checked ~ label {
+  color:gold;
+}
+.vote-btn{
+  margin-top:8px;
+  background:#ff7db5;
+  border:none;
+  padding:6px 10px;
+  border-radius:5px;
+  cursor:pointer;
+}
+.vote-btn:hover{opacity:.85}
+.avg{
+  margin-top:8px;
+  font-size:14px;
+  color:#ccc;
+}
+.rating-box{
+  margin:40px auto;
+  width:fit-content;
+  text-align:center;
+}
+.stars{
+  display:flex;
+  justify-content:center;
+}
+.comentarios-box{
+  background:#14141c;
+  padding:20px;
+  border-radius:14px;
+  margin-top:20px;
+  max-width:600px;
+}
+
+.form-comentario{
+  margin-top:15px;
+}
+
+.form-comentario textarea{
+  width:100%;
+  resize:none;
+}
+
+.form-comentario button{
+  display:block;
+  margin-top:10px;
+}
+
+</style>
+
+</form>
+{% else %}
+<p>Inicia sesión para votar</p>
+{% endif %}
+
+<style>
+body{
+  background:#0e0e13;
+  color:white;
+  font-family:Arial;
+  margin:0;
+}
+
+header{
+  background:#12121a;
+  padding:15px;
+}
+
+a{color:#ff7db5;text-decoration:none;}
+
+.content{
+  max-width:800px;
+  margin:auto;
+  padding:30px;
+}
+
+h1{color:#ff7db5;}
+
+.meta{color:#aaa;font-size:14px;margin-bottom:20px;}
+
+p{
+  line-height:1.7;
+  margin-bottom:15px;
+  white-space:pre-line;
+}
+.comentarios{
+  margin-top:30px;
+  max-width:600px;
+}
+
+.comentario{
+  background:#14141c;
+  padding:12px;
+  border-radius:10px;
+  margin:10px 0;
+}
+
+.meta{
+  font-size:13px;
+  color:#aaa;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+
+.texto{
+  line-height:1.4;
+}
+
+.sin{
+  color:#777;
+}
+
+.form-comentario textarea{
+  resize: none;
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+  background:#1a1a26;
+  color:white;
+}
+
+.form-comentario button{
+  margin-top:8px;
+  background:#ff7db5;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/">← Volver</a>
+</header>
+
+<div class="content">
+  <h1>{{ historia.titulo }}</h1>
+  <div class="meta">
+    Por {{ historia.autor }} • {{ historia.fecha|date:"d M Y H:i" }}
+  </div>
+
+  <p>👁 {{ historia.vistas }} vistas</p>
+
+  <p>{{ historia.contenido }}</p>
+  <div class="rating-box" style="margin:30px auto; text-align:center; display:block;">
+
+{% if promedio %}
+  <div class="avg">⭐ Promedio: {{ promedio }}/5</div>
+{% else %}
+  <div class="avg">Sin votos aún</div>
+{% endif %}
+
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'votar' historia.id %}">
+  {% csrf_token %}
+
+  <div class="stars">
+    <input type="radio" name="estrellas" id="star5" value="5" {% if voto_usuario and voto_usuario.estrellas == 5 %}checked{% endif %}>
+    <label for="star5">★</label>
+
+    <input type="radio" name="estrellas" id="star4" value="4" {% if voto_usuario and voto_usuario.estrellas == 4 %}checked{% endif %}>
+    <label for="star4">★</label>
+
+    <input type="radio" name="estrellas" id="star3" value="3" {% if voto_usuario and voto_usuario.estrellas == 3 %}checked{% endif %}>
+    <label for="star3">★</label>
+
+    <input type="radio" name="estrellas" id="star2" value="2" {% if voto_usuario and voto_usuario.estrellas == 2 %}checked{% endif %}>
+    <label for="star2">★</label>
+
+    <input type="radio" name="estrellas" id="star1" value="1" {% if voto_usuario and voto_usuario.estrellas == 1 %}checked{% endif %}>
+    <label for="star1">★</label>
+  </div>
+
+  <button type="submit" class="vote-btn">Votar</button>
+
+  {% if user.is_authenticated %}
+    <a href="{% url 'favorito' historia.id %}">
+      {% if es_favorito %}
+        ❤️ Quitar de favoritos
+      {% else %}
+        🤍 Agregar a favoritos
+      {% endif %}
+    </a>
+  {% endif %}
+
+</form>
+{% else %}
+<p>Inicia sesión para votar</p>
+{% endif %}
+<div class="comentarios-box">
+
+<h3>Comentarios</h3>
+
+  {% for c in comentarios %}
+    <div class="comentario-box">
+      <b>{{ c.usuario.username }}</b>
+      <small>{{ c.fecha|date:"d M Y H:i" }}</small>
+      <p>{{ c.texto }}</p>
+
+      {% if user.is_authenticated and c.usuario == user or user.perfil.rol == "moderador" %}
+        <a href="{% url 'borrar_comentario' c.id %}" class="borrar-link">Eliminar</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+  <form method="post" action="{% url 'comentar' historia.id %}">
+    {% csrf_token %}
+    <textarea name="comentario" required placeholder="Escribe tu comentario..."
+              style="width:100%;background:#111;color:white;padding:10px;"></textarea>
+    <button>Comentar</button>
+  </form>
+  {% endif %}
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

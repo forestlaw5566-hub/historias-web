@@ -1,0 +1,14 @@
+<h2>Panel de Moderación</h2>
+
+{% for r in reportes %}
+<div style="background:#161622; padding:15px; margin:15px; border-radius:10px;">
+  <p><b>{{ r.historia.titulo }}</b></p>
+  <p>Motivo: {{ r.motivo }}</p>
+  <p>Reportado por {{ r.usuario.username }} | {{ r.fecha|date:"d M Y H:i" }}</p>
+
+  <a href="{% url 'leer' r.historia.id %}">Ver</a> |
+  <a href="{% url 'borrar' r.historia.id %}">Eliminar</a>
+</div>
+{% empty %}
+<p>No hay reportes.</p>
+{% endfor %}

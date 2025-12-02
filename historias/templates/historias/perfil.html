@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mi perfil</title>
+<style>
+body{
+  background:#0e0e13;
+  font-family:Arial;
+  color:white;
+  margin:0;
+}
+header{
+  background:#12121a;
+  padding:15px;
+}
+a{color:#ff7db5;text-decoration:none;}
+.box{
+  max-width:600px;
+  margin:40px auto;
+  background:#1a1a26;
+  padding:20px;
+  border-radius:12px;
+}
+.label{color:#aaa;font-size:13px;}
+.role{font-size:18px;color:#ff7db5;}
+button{
+  background:#ff7db5;
+  border:none;
+  padding:8px 12px;
+  margin-top:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/">← Inicio</a>
+</header>
+
+<div class="box">
+  <h2>Perfil de usuario</h2>
+
+  <p class="label">Usuario:</p>
+  <p>{{ user.username }}</p>
+
+  <p class="label">Rol:</p>
+  <p class="role">{{ user.perfil.rol }}</p>
+  {% if user.perfil.rol == "autor" or user.perfil.rol == "moderador" %}
+
+  <h3>Mis historias</h3>
+
+  {% if mis_historias %}
+    <ul>
+      {% for h in mis_historias %}
+        <li>
+            <a href="{% url 'leer' h.id %}">{{ h.titulo }}</a> —
+            <a href="{% url 'editar' h.id %}">Editar</a> —
+            <a href="{% url 'borrar' h.id %}">Borrar</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No has publicado historias aún.</p>
+  {% endif %}
+
+{% endif %}
+
+
+  {% if user.perfil.rol == "autor" %}
+    <a href="/publicar/"><button>Publicar historia</button></a>
+  {% elif user.perfil.rol == "moderador" %}
+    <p>Tienes permisos de moderador.</p>
+  {% else %}
+    <p>Eres lector 👀</p>
+  {% endif %}
+
+<h3>Favoritos</h3>
+
+{% for f in favoritos %}
+  <p>
+    <a href="{% url 'leer' f.historia.id %}">{{ f.historia.titulo }}</a>
+  </p>
+{% empty %}
+  <p>No has guardado historias aún.</p>
+{% endfor %}
+
+<h3>🔔 Notificaciones</h3>
+
+{% for n in notificaciones %}
+  <div style="background:#181824;padding:8px;border-radius:8px;margin-bottom:6px;">
+    {{ n.mensaje }}
+    <small style="color:#888;display:block;">{{ n.fecha|date:"d M Y H:i" }}</small>
+  </div>
+{% empty %}
+  <p>No tienes notificaciones.</p>
+{% endfor %}
+</div>
+
+</body>
+</html>

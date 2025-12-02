@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Editar Historia</title>
+<style>
+body{background:#0e0e13;color:white;font-family:Arial;padding:30px;}
+input, textarea{width:100%;padding:10px;margin:8px 0;border:none;border-radius:6px;}
+button{background:#ff7db5;border:none;padding:10px;border-radius:8px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<h2>Editar historia</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="titulo" value="{{ historia.titulo }}" required>
+  <textarea name="descripcion">{{ historia.descripcion }}</textarea>
+  <textarea name="contenido" rows="10">{{ historia.contenido }}</textarea>
+  <button type="submit">Guardar cambios</button>
+</form>
+
+<a href="/perfil/">← Volver</a>
+
+</body>
+</html>
