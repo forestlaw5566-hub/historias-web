@@ -1,6 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>{{ historia.titulo }}</title>
 {% if promedio %}
@@ -12,78 +15,6 @@
 {% if user.is_authenticated %}
 <form method="post" action="{% url 'votar' historia.id %}">
   {% csrf_token %}
-<style>
-.rating-box{
-  background:#14141c;
-  padding:12px;
-  border-radius:10px;
-  margin-top:15px;
-  display:inline-block;
-}
-.rating-box{ margin-top:40px; }
-.stars{
-  display:flex;
-  justify-content:center;
-  gap:6px;
-  font-size:28px;
-}
-.stars input{display:none;}
-.stars label{
-  color:#444;
-  cursor:pointer;
-  transition:.2s;
-}
-.stars label:hover,
-.stars label:hover ~ label,
-.stars input:checked ~ label {
-  color:gold;
-}
-.vote-btn{
-  margin-top:8px;
-  background:#ff7db5;
-  border:none;
-  padding:6px 10px;
-  border-radius:5px;
-  cursor:pointer;
-}
-.vote-btn:hover{opacity:.85}
-.avg{
-  margin-top:8px;
-  font-size:14px;
-  color:#ccc;
-}
-.rating-box{
-  margin:40px auto;
-  width:fit-content;
-  text-align:center;
-}
-.stars{
-  display:flex;
-  justify-content:center;
-}
-.comentarios-box{
-  background:#14141c;
-  padding:20px;
-  border-radius:14px;
-  margin-top:20px;
-  max-width:600px;
-}
-
-.form-comentario{
-  margin-top:15px;
-}
-
-.form-comentario textarea{
-  width:100%;
-  resize:none;
-}
-
-.form-comentario button{
-  display:block;
-  margin-top:10px;
-}
-
-</style>
 
 </form>
 {% else %}
