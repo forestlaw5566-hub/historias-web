@@ -31,9 +31,10 @@ def leer_historia(request, id):
     historia.save(update_fields=["vistas"])
 
     ratings = Rating.objects.filter(historia=historia)
-
     promedio = ratings.aggregate(Avg("estrellas"))["estrellas__avg"]
     promedio = round(promedio, 1) if promedio else None
+
+    comentarios = Comentario.objects.filter(historia=historia).order_by("-fecha")
 
     voto_usuario = None
     es_favorito = False
@@ -41,7 +42,6 @@ def leer_historia(request, id):
     if request.user.is_authenticated:
         voto_usuario = Rating.objects.filter(historia=historia, usuario=request.user).first()
         es_favorito = Favorito.objects.filter(usuario=request.user, historia=historia).exists()
-        comentarios = Comentario.objects.filter(historia=historia).order_by("-fecha")
 
     return render(request, "historias/leer.html", {
         "historia": historia,
@@ -50,6 +50,7 @@ def leer_historia(request, id):
         "es_favorito": es_favorito,
         "comentarios": comentarios,
     })
+
 
 def publicar(request):
     if request.user.perfil.rol != 'autor':
